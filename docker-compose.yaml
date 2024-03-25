@@ -1,0 +1,70 @@
+version: '3.1'
+
+
+services:
+
+
+  wordpress:
+    image: hauro/eamvwebshop:wordpress-v1
+    restart: always
+    ports:
+      - "8080:80"
+    environment:
+      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_USER: exampleuser
+      WORDPRESS_DB_PASSWORD: examplepass
+      WORDPRESS_DB_NAME: exampledb
+    volumes:
+      - wordpress:/var/www/html
+
+
+  db:
+    image: hauro/eamvwebshop:mysql-v1
+    restart: always
+    environment:
+      MYSQL_DATABASE: exampledb
+      MYSQL_USER: exampleuser
+      MYSQL_PASSWORD: examplepass
+      MYSQL_RANDOM_ROOT_PASSWORD: '1'
+    volumes:
+      - db:/var/lib/mysql
+
+
+  phpmyadmin:
+    image: hauro/eamvwebshop:phpmyadmin-v1
+    restart: always
+    ports:
+      - "8181:80"
+    environment:
+      PMA_HOST: db
+      PMA_USER: exampleuser
+      PMA_PASSWORD: examplepass
+
+
+  portainer:
+    image: hauro/eamvwebshop:portainer-v1
+    restart: always
+    ports:
+      - "9191:9000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+
+
+  cadvisor:
+    image: hauro/eamvwebshop:cadvisor-v1
+    container_name: cadvisor
+    restart: always
+    ports:
+      - "8081:8080"
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+
+
+volumes:
+  wordpress:
+  db:
+  portainer_data:
