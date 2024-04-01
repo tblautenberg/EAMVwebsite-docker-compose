@@ -1,12 +1,9 @@
 version: '3.1'
 
-
 services:
 
-
   wordpress:
-    image: hauro/eamvwebshop:wordpress-v1
-    restart: always
+    image: wordpress
     ports:
       - "8080:80"
     environment:
@@ -17,10 +14,8 @@ services:
     volumes:
       - wordpress:/var/www/html
 
-
   db:
-    image: hauro/eamvwebshop:mysql-v1
-    restart: always
+    image: mysql:8.0
     environment:
       MYSQL_DATABASE: exampledb
       MYSQL_USER: exampleuser
@@ -29,10 +24,8 @@ services:
     volumes:
       - db:/var/lib/mysql
 
-
   phpmyadmin:
-    image: hauro/eamvwebshop:phpmyadmin-v1
-    restart: always
+    image: phpmyadmin/phpmyadmin
     ports:
       - "8181:80"
     environment:
@@ -40,21 +33,17 @@ services:
       PMA_USER: exampleuser
       PMA_PASSWORD: examplepass
 
-
   portainer:
-    image: hauro/eamvwebshop:portainer-v1
-    restart: always
+    image: portainer/portainer
     ports:
       - "9191:9000"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - portainer_data:/data
 
-
   cadvisor:
-    image: hauro/eamvwebshop:cadvisor-v1
+    image: google/cadvisor:latest
     container_name: cadvisor
-    restart: always
     ports:
       - "8081:8080"
     volumes:
@@ -62,7 +51,6 @@ services:
       - /var/run:/var/run:ro
       - /sys:/sys:ro
       - /var/lib/docker/:/var/lib/docker:ro
-
 
 volumes:
   wordpress:
